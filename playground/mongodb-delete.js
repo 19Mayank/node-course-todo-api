@@ -18,8 +18,14 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',
                 // });
 
                 //findOneand Delete
-                db.collection('Users').deleteMany({name: 'Mayank Parashar'}).then((result) => {
-                  console.log(result);
+                db.collection('Users').findOneAndUpdate({
+                  _id: new ObjectID('5b7f7489a8cb04324826aa44'
+                )},{
+                  $inc:{ age: 25}
+                },{
+                  returnOriginal: false
+                }).then((result) => {
+                    console.log(result);
                 });
 
                 client.close();
