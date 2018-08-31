@@ -80,7 +80,7 @@ app.get('/todos/:id', authenticate , (req,res) => {
     }
 
     Todo.findOneAndRemove({
-        id:id,
+        _id:id,
         _creator: req.user._id
     }).then((todo)=> {
       if(!todo){
@@ -101,7 +101,7 @@ app.get('/todos/:id', authenticate , (req,res) => {
 
     if(!ObjectID.isValid(id)){
       //console.log('ID not Valid');
-      return res.status(404).send('ObjectID not Valid');
+      return res.status(404).send();
     }
 
     if(_.isBoolean(body.completed) && body.completed){
@@ -113,7 +113,7 @@ app.get('/todos/:id', authenticate , (req,res) => {
 
     Todo.findOneAndUpdate({_id:id, _creator: req.user._id}, {$set: body}, {new: true}).then((todo) => {
       if(!todo){
-        return res.status(404).send('No Todo Found');
+        return res.status(404).send();
       }
 
       res.send({todo});
