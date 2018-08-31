@@ -46,7 +46,7 @@ app.get('/todos/:id', (req,res) => {
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)){
-    console.log('ID not Valid');
+    //console.log('ID not Valid');
     return res.status(404).send();
   }
 
@@ -55,11 +55,11 @@ app.get('/todos/:id', (req,res) => {
       res.status(400).send('');
     }
 
-    console.log('\n\n\n THE TODO \n',todo);
+    //console.log('\n\n\n THE TODO \n',todo);
     res.send({todo});
 
   },(e) => {
-    console.log('Error',e);
+    //console.log('Error',e);
     res.status(400).send({});
   });
 
@@ -69,7 +69,7 @@ app.get('/todos/:id', (req,res) => {
     var id =req.params.id;
 
     if(!ObjectID.isValid(id)){
-      console.log('ID not Valid');
+      //console.log('ID not Valid');
       return res.status(404).send();
     }
 
@@ -78,7 +78,7 @@ app.get('/todos/:id', (req,res) => {
         return res.status(404).send();
       }
 
-      console.log('Todo \n\n', todo);
+      //console.log('Todo \n\n', todo);
       res.send({todo});
     }).catch((e) => {
       res.status(400).send();
@@ -91,7 +91,7 @@ app.get('/todos/:id', (req,res) => {
     var body = _.pick(req.body, ['text', 'completed']);
 
     if(!ObjectID.isValid(id)){
-      console.log('ID not Valid');
+      //console.log('ID not Valid');
       return res.status(404).send();
     }
 
@@ -120,7 +120,7 @@ app.get('/todos/:id', (req,res) => {
     var body = _.pick(req.body, ['email', 'password']);
 
     var user = new User(body);
-    console.log(user);
+    //console.log(user);
 
     user.save().then(() => {
     //console.log('save user : \n',user);
@@ -128,7 +128,7 @@ app.get('/todos/:id', (req,res) => {
       // res.send(user);
     }).then((token) => {
       res.header('x-auth', token).send(user);
-      console.log('token: ',token);
+      //console.log('token: ',token);
     }).catch((e) => {
       res.status(400).send(e);
     });
@@ -139,6 +139,19 @@ app.get('/todos/:id', (req,res) => {
 
   app.get('/users/me', authenticate, (req, res) => {
     res.send(req.user);
+  });
+
+//POST /users/login {email, password}
+  app.post('/users/login', (req,res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+
+    User.findByCredentials(body.email, body.password).then((user) => {
+      return user.generateAuthToken().then((token) => {
+        res.header('x-auth', token).send(user);
+      });
+    }).catch((e) => {
+      res.status(400).send();
+    });
   });
 
 
